@@ -10,6 +10,7 @@ public final class Consts {
 		public static final String TFTFBT = "TfTfBt";
 		public static final String LBLBLB= "LbLbLb";
 	}
+	
 	public class MsgConst{
 		public static final String STR_MSG = "str_msg";
 		public static final String JSON_MSG = "json_msg";
