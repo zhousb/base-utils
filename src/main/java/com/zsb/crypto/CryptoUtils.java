@@ -3,6 +3,7 @@ package com.zsb.crypto;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
@@ -15,6 +16,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 加解密工具类 Date: 2016年4月12日 <br>
@@ -23,6 +26,8 @@ import org.apache.commons.lang.StringUtils;
  * 
  */
 public final class CryptoUtils {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(CryptoUtils.class);
 	
 	/**
 	 * aes 加密模式为AES/CBC/PKCS5Padding
@@ -54,7 +59,7 @@ public final class CryptoUtils {
 
 	
 	/**
-	 * 加密
+	 * AES128_CBC加密
 	 * @param content
 	 * @return
 	 */
@@ -82,26 +87,26 @@ public final class CryptoUtils {
 			afCnt = new String(Base64.encodeBase64(result),UTF_8);
 			
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		} catch (InvalidKeyException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		} catch (InvalidAlgorithmParameterException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		} catch (BadPaddingException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		}
 		
 		return afCnt;
 	}
 	
 	/**
-	 * 解密
+	 * AES128_CBC解密
 	 * @param content
 	 * @return
 	 */
@@ -129,19 +134,19 @@ public final class CryptoUtils {
 			return new String(original,UTF_8);
 			
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		} catch (InvalidKeyException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		} catch (InvalidAlgorithmParameterException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		} catch (BadPaddingException e) {
-			e.printStackTrace();
+			LOG.error("",e);
 		}
 		
 		return null;
@@ -158,11 +163,34 @@ public final class CryptoUtils {
 		return iv;
 	}
 		
-	public static void main(String args[]){
-
-		String str1 = encrypt("Admin@1234eeee");
-		System.out.println(str1);	
-		System.out.println(decrypt(str1));
+	/**
+	 * 进行md5加密
+	 * @param content
+	 * @return 
+	 */
+	public static String getMD5String(String content) throws Exception{
+		if(StringUtils.isEmpty(content)){
+			throw new Exception("参数不能为空");
+		}
+		MessageDigest md;
+		md = MessageDigest.getInstance("MD5");
+		md.update(content.getBytes());
+		String strDes = bytes2Hex(md.digest()); 
+        return strDes;
+		
 	}
+	private static String bytes2Hex(byte[] bts) {  
+        StringBuffer des = new StringBuffer();  
+        String tmp = null;  
+        for (int i = 0; i < bts.length; i++) {
+            tmp = (Integer.toHexString(bts[i] & 0xFF >> 3));  
+            if (tmp.length() == 1) {  
+                des.append("0");  
+            }  
+            des.append(tmp);  
+        }  
+        return des.toString();  
+    } 
+
 	
 }
